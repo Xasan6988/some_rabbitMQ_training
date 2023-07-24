@@ -12,6 +12,7 @@ amqp.connect('amqp://localhost', (err0, connection) => {
       durable: true
     })
 
+    // This param set limit for noAck msg
     channel.prefetch(1);
 
     console.log(" [*] Waiting for messages in %s. To exit press CTRL+C", queue);
@@ -23,6 +24,7 @@ amqp.connect('amqp://localhost', (err0, connection) => {
 
       setTimeout(() => {
         console.log(' [*] Done');
+        // After msg processed - we need send ack
         channel.ack(msg);
       }, 5000);
     })

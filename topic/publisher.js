@@ -7,19 +7,18 @@ amqp.connect('amqp://localhost', (err0, connection) => {
     if (err1) throw err1;
 
 
-    const exchange = 'direct_logs';
+    const exchange = 'topic_logs';
     const args = ['info', 'error', 'success', 'warning']
     const msg = 'Hello World!';
-    const severity = args[Math.floor(Math.random() * (3 + 1))]
+    const key = `anonymoys.${args[Math.floor(Math.random() * (3 + 1))]}`
 
 
-    channel.assertExchange(exchange, 'direct', {
+    channel.assertExchange(exchange, 'topic', {
       durable: false
     });
 
-    // Second param - key, it need for routing messages into consumer
-    channel.publish(exchange, severity, Buffer.from(msg));
-    console.log(" [x] Sent %s", msg);
+    channel.publish(exchange, key, Buffer.from(msg));
+    console.log(" [x] Sent %s", key, msg);
   });
 
   setTimeout(function() {

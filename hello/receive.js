@@ -14,9 +14,11 @@ amqp.connect('amqp://localhost', (err0, connection) => {
 
     console.log(" [*] Waiting for messages in %s. To exit press CTRL+C", queue);
 
+    // Get message from declared above queue
     channel.consume(queue, msg => {
       console.log("[*] Received %s", msg.content.toString());
     }, {
+      // This param turn off acknowledgement
       noAck: true
     })
   })

@@ -1,6 +1,6 @@
 const amqp = require('amqplib/callback_api');
 
-const args = ['info', 'error', 'success', 'warning']
+const args = ['*.info', '*.error', '*.success', '*.warning']
 
 if (args.length == 0) {
   console.log("Usage: receive_logs_direct.js [info] [warning] [error]");
@@ -13,9 +13,9 @@ amqp.connect('amqp://localhost', (err0, connection) => {
   connection.createChannel((err1, channel) => {
     if (err1) throw err1;
 
-    const exchange = 'direct_logs';
+    const exchange = 'topic_logs';
 
-    channel.assertExchange(exchange, 'direct', {
+    channel.assertExchange(exchange, 'topic', {
       durable: false
     });
 
@@ -24,11 +24,10 @@ amqp.connect('amqp://localhost', (err0, connection) => {
     }, (err2, q) => {
       if (err2) throw err2
 
-      console.log(" [*] Waiting for messages in %s. To exit press CTRL+C", q.queue);
+      console.log(" [*] Waiting for messages in %s. To exit press CTRL+C");
 
-      // For each keys we binding this consumer with queue, it allows setting routing, based on routing keys
-      args.forEach(severity => {
-        channel.bindQueue(q.queue, exchange, severity);
+      args.forEach(key => {
+        channel.bindQueue(q.queue, exchange, key);
       });
 
       channel.consume(q.queue, msg => {

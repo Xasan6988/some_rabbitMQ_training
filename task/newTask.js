@@ -10,9 +10,11 @@ amqp.connect('amqp://localhost', (err0, connection) => {
     const msg = process.argv.slice(2).join(' ') || 'Hello World';
 
     channel.assertQueue(queue, {
+      // This param save queue on disk
       durable: true
     })
     channel.sendToQueue(queue, Buffer.from(msg), {
+      // This para, save message on disk
       persistent: true
     });
 

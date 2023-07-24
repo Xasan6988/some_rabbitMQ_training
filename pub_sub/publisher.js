@@ -11,6 +11,7 @@ amqp.connect('amqp://localhost', (err0, connection) => {
 
     const msg = process.argv.slice(2).join(' ') || 'Hello World!';
 
+    // Second param - type of exchange
     channel.assertExchange(exchange, 'fanout', {
       durable: false
     });
